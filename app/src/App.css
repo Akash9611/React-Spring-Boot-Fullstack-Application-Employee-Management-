@@ -3,6 +3,9 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  background-color: #1a1a1a;
+  color: rgba(255, 255, 255, 0.9);
+  min-height: 100vh;
 }
 
 .logo {
@@ -35,8 +38,42 @@
 
 .card {
   padding: 2em;
+  background-color: #2a2a2a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .read-the-docs {
-  color: #888;
+  color: #aaa;
+}
+
+/* Dark theme for tables and Bootstrap components */
+.table {
+  color: rgba(255, 255, 255, 0.9);
+  background-color: #2a2a2a;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) > td,
+.table-striped > tbody > tr:nth-of-type(odd) > th {
+  background-color: #333;
+}
+
+.table thead th {
+  background-color: #1a1a1a;
+  border-color: #444;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.table td, .table th {
+  border-color: #444;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+/* Override any Bootstrap light theme styles */
+.text-center {
+  color: rgba(255, 255, 255, 0.9);
 }
