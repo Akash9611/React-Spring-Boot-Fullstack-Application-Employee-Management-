@@ -1,5 +1,5 @@
 import React from 'react'
-import ListEmployeeComponent from '../components/ListEmployeeComponent'
+import { ListEmployeeComponent } from '../components'
 
 const Employees = () => {
     return (

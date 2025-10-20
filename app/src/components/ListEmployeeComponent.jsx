@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { listEmployees } from '../services/EmployeeService';
+import { Link } from 'react-router-dom';
 
 const ListEmployeeComponent = () => {
     const [employees, setEmployees] = useState([]);
@@ -9,7 +10,7 @@ const ListEmployeeComponent = () => {
             const response = await listEmployees()
             if (response)
                 setEmployees(response.data)
-            else 
+            else
                 console.error("Failed to fetch employees")
         }
         fetchData()
@@ -17,6 +18,7 @@ const ListEmployeeComponent = () => {
 
     return (
         <div className="container-fluid">
+            <button type='button' className='btn btn-primary'><Link to="/add-employee" className='text-decoration-none text-white'>Add Employee</Link></button>
             <h2 className="text-center my-4 text-light">Employees List</h2>
             <div className="table-responsive">
                 <table className="table table-dark table-striped table-hover">
