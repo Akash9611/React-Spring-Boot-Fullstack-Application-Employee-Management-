@@ -1,11 +1,27 @@
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  width: 100%;
+  margin: 0;
+  padding: 0;
   background-color: #1a1a1a;
   color: rgba(255, 255, 255, 0.9);
   min-height: 100vh;
+}
+
+/* App layout styles */
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+  padding: 0;
+}
+
+/* Content spacing */
+.main-content {
+  padding: 2rem 0;
 }
 
 .logo {

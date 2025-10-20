@@ -1,15 +1,21 @@
 import './App.css'
-import ListEmployeeComponent from './components/ListEmployeeComponent'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import Layout from './shared/Layout'
+import Home from './pages/Home'
+import Employees from './pages/Employees'
 
 function App() {
-
   return (
-    <div className="min-vh-100 bg-dark text-light">
-      <div className="container-fluid py-4">
-        <h1 className="text-center mb-5 text-primary">Employee Management System</h1>
-        <ListEmployeeComponent/>
-      </div>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Home />} />
+          <Route path="home" element={<Home />} />
+          <Route path="employees" element={<Employees />} />
+          <Route path="*" element={<h2 className='text-center'>404 - Page Not Found</h2>} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   )
 }
 
