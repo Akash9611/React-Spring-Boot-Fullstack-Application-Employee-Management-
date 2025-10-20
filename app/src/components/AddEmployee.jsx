@@ -1,35 +1,62 @@
 import React, { useState } from 'react'
 import '../assets/css/Form.css'
+import { addEmployee } from '../services/EmployeeService'
+import { useNavigate } from 'react-router-dom'
 
 const AddEmployee = () => {
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
     const [email, setEmail] = useState('')
 
+    const navigator = useNavigate()
 
-    const handleSubmit = (e) => {
+    const [validationError, setValidationError] = useState({
+        firstName: '',
+        lastName: '',
+        email: ''
+    })
+
+    const formValidation = () => {
+        let errorMsg = { ...validationError }
+        let isValid = true;
+        if (!firstName.trim()) {
+            errorMsg.firstName = 'First Name is required';
+            isValid = false;
+        }
+
+        if (!lastName.trim()) {
+            errorMsg.lastName = 'Last Name is required';
+            isValid = false;
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email.trim()) {
+            errorMsg.email = 'Email is required';
+            isValid = false;
+        } else if (!emailRegex.test(email.trim())) {
+            errorMsg.email = 'Please enter a valid email address';
+            isValid = false;
+        }
+
+        setValidationError(errorMsg);
+        // return true when there are NO errors
+        return isValid;
+    }
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Basic validation
-        if (!firstName.trim() || !lastName.trim() || !email.trim()) {
-            alert('Please fill in all required fields');
-            return;
-        }
+        if (!formValidation()) return;// stop form submission if invalid
 
-        // Email validation
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            alert('Please enter a valid email address');
-            return;
-        }
-
-        // Handle form submission logic here
-        console.log("Form submitted with:", {
+        const employeeData = {
             firstName: firstName.trim(),
             lastName: lastName.trim(),
             email: email.trim()
-        });
+        };
 
+        await addEmployee(employeeData);
+        // alert('Employee added successfully!');
+        navigator('/employees');
         // Reset form after successful submission
         handleReset();
     }
@@ -38,7 +65,9 @@ const AddEmployee = () => {
         setFirstName('');
         setLastName('');
         setEmail('');
+        setValidationError({ firstName: '', lastName: '', email: '' });
     }
+
     return (
         <div className='container-fluid py-5 form-container add-employee-form'>
             <div className="row justify-content-center">
@@ -56,11 +85,19 @@ const AddEmployee = () => {
                                 <div className="form-floating mb-3">
                                     <input
                                         type="text"
-                                        className="form-control bg-dark text-light border-secondary"
+                                        className={`form-control bg-dark text-light border-secondary ${validationError.firstName ? 'is-invalid' : ''}`}
                                         id="firstName"
                                         name="firstName"
                                         value={firstName}
-                                        onChange={(e) => setFirstName(e.target.value)}
+                                        // onChange={(e) => setFirstName(e.target.value)}
+                                        onChange={(e) => {
+                                            const v = e.target.value
+                                            setFirstName(v)
+                                            //Removes validationError message when user starts typing
+                                            if (validationError.firstName && v.trim() !== '') {
+                                                setValidationError(prev => ({ ...prev, firstName: '' }))
+                                            }
+                                        }}
                                         placeholder=" "
                                         required
                                     />
@@ -68,20 +105,27 @@ const AddEmployee = () => {
                                         <i className="bi bi-person me-1"></i>
                                         First Name
                                     </label>
-                                    <div className="invalid-feedback">
-                                        Please provide a valid first name.
-                                    </div>
+                                    {validationError.firstName && <div className="invalid-feedback">
+                                        {validationError.firstName}
+                                    </div>}
                                 </div>
 
                                 {/* Last Name Field */}
                                 <div className="form-floating mb-3">
                                     <input
                                         type="text"
-                                        className="form-control bg-dark text-light border-secondary"
+                                        className={`form-control bg-dark text-light border-secondary ${validationError.lastName ? 'is-invalid' : ''}`}
                                         id="lastName"
                                         name="lastName"
                                         value={lastName}
-                                        onChange={(e) => setLastName(e.target.value)}
+                                        onChange={(e) => {
+                                            const v = e.target.value;
+                                            setLastName(v);
+                                            //Removes validationError message when user starts typing
+                                            if (validationError.lastName && v.trim() !== '') {
+                                                setValidationError(prev => ({ ...prev, lastName: '' }))
+                                            }
+                                        }}
                                         placeholder=" "
                                         required
                                     />
@@ -89,20 +133,27 @@ const AddEmployee = () => {
                                         <i className="bi bi-person me-1"></i>
                                         Last Name
                                     </label>
-                                    <div className="invalid-feedback">
-                                        Please provide a valid last name.
-                                    </div>
+                                    {validationError.lastName && <div className="invalid-feedback">
+                                        {validationError.lastName}
+                                    </div>}
                                 </div>
 
                                 {/* Email Field */}
                                 <div className="form-floating mb-3">
                                     <input
                                         type="email"
-                                        className="form-control bg-dark text-light border-secondary"
+                                        className={`form-control bg-dark text-light border-secondary ${validationError.email ? 'is-invalid' : ''}`}
                                         id="email"
                                         name="email"
                                         value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
+                                        onChange={(e) => {
+                                            const v = e.target.value
+                                            setEmail(v)
+                                            //Removes validationError message when user starts typing
+                                            if (validationError.email && v.trim() !== '') {
+                                                setValidationError(prev => ({ ...prev, email: '' }))
+                                            }
+                                        }}
                                         placeholder=" "
                                         required
                                     />
@@ -110,9 +161,9 @@ const AddEmployee = () => {
                                         <i className="bi bi-envelope me-1"></i>
                                         Email Address
                                     </label>
-                                    <div className="invalid-feedback">
-                                        Please provide a valid email address.
-                                    </div>
+                                    {validationError.email && <div className="invalid-feedback">
+                                        {validationError.email}
+                                    </div>}
                                 </div>
 
                                 {/* Department Field */}
