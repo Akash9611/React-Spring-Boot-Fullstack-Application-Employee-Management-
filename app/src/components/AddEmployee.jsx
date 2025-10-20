@@ -1,22 +1,49 @@
-import React from 'react'
+import React, { useState } from 'react'
 import '../assets/css/Form.css'
+
 const AddEmployee = () => {
+    const [firstName, setFirstName] = useState('')
+    const [lastName, setLastName] = useState('')
+    const [email, setEmail] = useState('')
 
-    const handleInputFocus = (e) => {
-        e.target.parentElement.classList.add('focused')
-    }
 
-    const handleInputBlur = (e) => {
-        if (!e.target.value) {
-            e.target.parentElement.classList.remove('focused')
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        // Basic validation
+        if (!firstName.trim() || !lastName.trim() || !email.trim()) {
+            alert('Please fill in all required fields');
+            return;
         }
+
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            alert('Please enter a valid email address');
+            return;
+        }
+
+        // Handle form submission logic here
+        console.log("Form submitted with:", {
+            firstName: firstName.trim(),
+            lastName: lastName.trim(),
+            email: email.trim()
+        });
+
+        // Reset form after successful submission
+        handleReset();
     }
 
+    const handleReset = () => {
+        setFirstName('');
+        setLastName('');
+        setEmail('');
+    }
     return (
-        <div className="container-fluid py-5">
+        <div className='container-fluid py-5 form-container add-employee-form'>
             <div className="row justify-content-center">
                 <div className="col-lg-8 col-xl-6">
-                    <div className="card bg-dark border-primary shadow-lg">
+                    <div className="card bg-dark border-primary shadow-lg form-card">
                         <div className="card-header bg-primary text-white">
                             <h2 className="card-title mb-0 text-center">
                                 <i className="bi bi-person-plus-fill me-2"></i>
@@ -24,7 +51,7 @@ const AddEmployee = () => {
                             </h2>
                         </div>
                         <div className="card-body p-4">
-                            <form onSubmit={console.log("Form submitted")} className="needs-validation" noValidate>
+                            <form onSubmit={handleSubmit} className="needs-validation" noValidate>
                                 {/* First Name Field */}
                                 <div className="form-floating mb-3">
                                     <input
@@ -32,9 +59,9 @@ const AddEmployee = () => {
                                         className="form-control bg-dark text-light border-secondary"
                                         id="firstName"
                                         name="firstName"
-                                        placeholder="Enter first name"
-                                        onFocus={handleInputFocus}
-                                        onBlur={handleInputBlur}
+                                        value={firstName}
+                                        onChange={(e) => setFirstName(e.target.value)}
+                                        placeholder=" "
                                         required
                                     />
                                     <label htmlFor="firstName" className="text-light-emphasis">
@@ -53,9 +80,9 @@ const AddEmployee = () => {
                                         className="form-control bg-dark text-light border-secondary"
                                         id="lastName"
                                         name="lastName"
-                                        placeholder="Enter last name"
-                                        onFocus={handleInputFocus}
-                                        onBlur={handleInputBlur}
+                                        value={lastName}
+                                        onChange={(e) => setLastName(e.target.value)}
+                                        placeholder=" "
                                         required
                                     />
                                     <label htmlFor="lastName" className="text-light-emphasis">
@@ -74,9 +101,9 @@ const AddEmployee = () => {
                                         className="form-control bg-dark text-light border-secondary"
                                         id="email"
                                         name="email"
-                                        placeholder="Enter email address"
-                                        onFocus={handleInputFocus}
-                                        onBlur={handleInputBlur}
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        placeholder=" "
                                         required
                                     />
                                     <label htmlFor="email" className="text-light-emphasis">
@@ -94,8 +121,6 @@ const AddEmployee = () => {
                                         className="form-select bg-dark text-light border-secondary"
                                         id="department"
                                         name="department"
-                                        onFocus={handleInputFocus}
-                                        onBlur={handleInputBlur}
                                         required
                                     >
                                         <option value="">Choose Department</option>
@@ -123,8 +148,6 @@ const AddEmployee = () => {
                                         id="position"
                                         name="position"
                                         placeholder="Enter job position"
-                                        onFocus={handleInputFocus}
-                                        onBlur={handleInputBlur}
                                         required
                                     />
                                     <label htmlFor="position" className="text-light-emphasis">
@@ -146,8 +169,6 @@ const AddEmployee = () => {
                                         placeholder="Enter salary"
                                         min="0"
                                         step="1000"
-                                        onFocus={handleInputFocus}
-                                        onBlur={handleInputBlur}
                                         required
                                     />
                                     <label htmlFor="salary" className="text-light-emphasis">
@@ -168,8 +189,6 @@ const AddEmployee = () => {
                                         name="phone"
                                         placeholder="Enter phone number"
                                         pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-                                        onFocus={handleInputFocus}
-                                        onBlur={handleInputBlur}
                                         required
                                     />
                                     <label htmlFor="phone" className="text-light-emphasis">
@@ -194,6 +213,7 @@ const AddEmployee = () => {
                                     <button
                                         type="reset"
                                         className="btn btn-outline-secondary btn-lg px-4 hover-glow"
+                                        onClick={handleReset}
                                     >
                                         <i className="bi bi-arrow-counterclockwise me-2"></i>
                                         Reset Form
