@@ -1,20 +1,35 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import '../assets/css/Form.css'
-import { addEmployee } from '../services/EmployeeService'
-import { useNavigate } from 'react-router-dom'
+import { addEmployee, getEmployeeById, updateEmployee } from '../services/EmployeeService'
+import { useNavigate, useParams } from 'react-router-dom'
 
-const AddEmployee = () => {
+const AddandUpdateEmployee = () => {
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
     const [email, setEmail] = useState('')
-
-    const navigator = useNavigate()
-
     const [validationError, setValidationError] = useState({
         firstName: '',
         lastName: '',
         email: ''
     })
+
+    const navigator = useNavigate()
+    const { id } = useParams();
+
+    useEffect(() => {
+        if (id) {
+            const fetchEmployeeForEdit = async () => {
+                await getEmployeeById(id).then((response) => {
+                    setFirstName(response.data.firstName);
+                    setLastName(response.data.lastName);
+                    setEmail(response.data.email);
+                }).catch((error) => {
+                    console.error("Error fetching employee data for edit:", error);
+                });
+            }
+            fetchEmployeeForEdit();
+        }
+    }, [id]);
 
     const formValidation = () => {
         let errorMsg = { ...validationError }
@@ -53,13 +68,27 @@ const AddEmployee = () => {
             lastName: lastName.trim(),
             email: email.trim()
         };
-
-        await addEmployee(employeeData);
-        // alert('Employee added successfully!');
-        navigator('/employees');
+        if (id) {
+            await updateEmployee(id, employeeData).then((response) => {
+                console.log("Employee updated successfully:", response.data);
+                navigator('/employees');
+            }).catch((err) => {
+                console.error("Error updating employee:", err);
+            });
+        } else {
+            await addEmployee(employeeData).then((response) => {
+                console.log("Employee added successfully:", response.data);
+            }).catch((err) => {
+                console.error("Error adding employee:", err);
+            });
+            // alert('Employee added successfully!');
+            navigator('/employees');
+        }
         // Reset form after successful submission
         handleReset();
     }
+
+
 
     const handleReset = () => {
         setFirstName('');
@@ -67,6 +96,8 @@ const AddEmployee = () => {
         setEmail('');
         setValidationError({ firstName: '', lastName: '', email: '' });
     }
+
+
 
     return (
         <div className='container-fluid py-5 form-container add-employee-form'>
@@ -76,7 +107,7 @@ const AddEmployee = () => {
                         <div className="card-header bg-primary text-white">
                             <h2 className="card-title mb-0 text-center">
                                 <i className="bi bi-person-plus-fill me-2"></i>
-                                Add New Employee
+                                {id ? 'Edit Employee' : 'Add New Employee'}
                             </h2>
                         </div>
                         <div className="card-body p-4">
@@ -259,7 +290,7 @@ const AddEmployee = () => {
                                         className="btn btn-primary btn-lg px-4 me-md-2 pulse-animation"
                                     >
                                         <i className="bi bi-plus-circle me-2"></i>
-                                        Add Employee
+                                        {id ? "Update Employee" : "Add Employee"}
                                     </button>
                                     <button
                                         type="reset"
@@ -287,4 +318,4 @@ const AddEmployee = () => {
     )
 }
 
-export default AddEmployee
+export default AddandUpdateEmployee

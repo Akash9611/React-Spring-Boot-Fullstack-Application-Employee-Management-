@@ -1,10 +1,10 @@
-import AddEmployee from "./AddEmployee";
+import AddandUpdateEmployee from "./AddandUpdateEmployee";
 import Header from "./Header";
 import Footer from "./Footer";
 import ListEmployeeComponent from "./ListEmployeeComponent";
 
 export {
-    AddEmployee,
+    AddandUpdateEmployee,
     Header,
     Footer,
     ListEmployeeComponent
